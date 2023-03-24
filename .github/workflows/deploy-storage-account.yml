@@ -70,3 +70,32 @@ jobs:
         resourceGroupName: ${{ secrets.RESOURCE_GROUP_NAME_TEST }}
         template: './Templates/storageaccount.bicep'
         parameters: storageAccountName=${{ vars.STORAGE_ACCOUNT_NAME }} fileShareName=${{ vars.FILE_SHARE_NAME }}
+
+  deploy_prod:
+    environment: prod
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true && github.event.pull_request.head.ref == 'feature'
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Login to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+    
+    - name: Deploy prod resource group
+      uses: azure/arm-deploy@v1
+      with: 
+        scope: subscription
+        subscriptionId: ${{ secrets.SUBSCRIPTION_ID_PROD }}
+        region: ${{ vars.LOCATION }}
+        template: ./Templates/resourcegroup.bicep
+        parameters: resourceGroupName=${{ secrets.RESOURCE_GROUP_NAME_PROD }} location=${{ vars.LOCATION }}
+
+    - name: Deploy to prod environment
+      uses: azure/arm-deploy@v1
+      with:
+        subscriptionId: ${{ secrets.SUBSCRIPTION_ID_PROD }}
+        resourceGroupName: ${{ secrets.RESOURCE_GROUP_NAME_PROD }}
+        template: './Templates/storageaccount.bicep'
+        parameters: storageAccountName=${{ vars.STORAGE_ACCOUNT_NAME }} fileShareName=${{ vars.FILE_SHARE_NAME }}
