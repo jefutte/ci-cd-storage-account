@@ -25,9 +25,9 @@ jobs:
       with: 
         scope: subscription
         subscriptionId: ${{ secrets.SUBSCRIPTION_ID_DEV }}
-        region: ${{ env.AZURE_REGION }}
+        region: ${{ vars.LOCATION }}
         template: ./Templates/resourcegroup.bicep
-        parameters: resourceGroupName=${{ secrets.RESOURCE_GROUP_NAME_DEV }} location=${{ env.AZURE_REGION }}
+        parameters: resourceGroupName=${{ secrets.RESOURCE_GROUP_NAME_DEV }} location=${{ vars.LOCATION }}
 
     - name: Build and deploy Bicep template to development environment
       uses: azure/arm-deploy@v1
@@ -35,4 +35,4 @@ jobs:
         subscriptionId: ${{ secrets.SUBSCRIPTION_ID_DEV }}
         resourceGroupName: ${{ secrets.RESOURCE_GROUP_NAME_DEV }}
         template: './Templates/storageaccount.bicep'
-        parameters: storageAccountName=${{ env.STORAGE_ACCOUNT_NAME }} fileShareName=${{ env.FILE_SHARE_NAME }}
+        parameters: storageAccountName=${{ vars.STORAGE_ACCOUNT_NAME }} fileShareName=${{ vars.FILE_SHARE_NAME }}
