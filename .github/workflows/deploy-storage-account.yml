@@ -18,11 +18,19 @@ jobs:
       uses: azure/login@v1
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
+    
+    - name: Deploy resource group
+      uses: azure/arm-deploy@v1
+      with: 
+        scope: subscription
+        subscriptionId: ${{ secrets.SUBSCRIPTION_ID_DEV }}
+        templateFilePath: ./Templates/resourcegroup.bicep
+        parameters: resourceGroupName=${{ secret.RESOURCE_GROUP_NAME_DEV }}
+
     - name: Build and deploy Bicep template to development environment
       uses: azure/arm-deploy@v1
       with:
         subscriptionId: ${{ secrets.SUBSCRIPTION_ID_DEV }}
         resourceGroupName: ${{ secrets.RESOURCE_GROUP_NAME_DEV }}
         templateFilePath: './Templates/storageaccount.bicep'
-        parameters: ${{ env.STORAGE_ACCOUNT_NAME }} ${{ env.FILE_SHARE_NAME }}
-        deploymentMode: 'Incremental'
+        parameters: storageAccountName=${{ env.STORAGE_ACCOUNT_NAME }} fileShareName=${{ env.FILE_SHARE_NAME }}
