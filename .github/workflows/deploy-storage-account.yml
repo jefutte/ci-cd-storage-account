@@ -25,8 +25,8 @@ jobs:
         scope: subscription
         subscriptionId: ${{ secrets.SUBSCRIPTION_ID_DEV }}
         template: ./Templates/resourcegroup.bicep
-        parameters: resourceGroupName=${{ secrets.RESOURCE_GROUP_NAME_DEV }} location=${{ env.LOCATION }}
-        region: ${{ env.LOCATION }}
+        parameters: resourceGroupName=${{ secrets.RESOURCE_GROUP_NAME_DEV }} location=${{ env.AZURE_REGION }}
+        region: ${{ env.AZURE_REGION }}
 
     - name: Build and deploy Bicep template to development environment
       uses: azure/arm-deploy@v1
