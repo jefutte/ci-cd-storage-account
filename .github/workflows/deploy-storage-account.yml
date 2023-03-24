@@ -6,7 +6,10 @@ on:
       - feature/*
   pull_request:
     branches:
-      - feature/*
+      - main
+    types:
+      - opened
+      - synchronize
 
 jobs:
   deploy_dev:
@@ -20,7 +23,7 @@ jobs:
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
     
-    - name: Deploy resource group
+    - name: Deploy dev resource group
       uses: azure/arm-deploy@v1
       with: 
         scope: subscription
@@ -29,7 +32,7 @@ jobs:
         template: ./Templates/resourcegroup.bicep
         parameters: resourceGroupName=${{ secrets.RESOURCE_GROUP_NAME_DEV }} location=${{ vars.LOCATION }}
 
-    - name: Build and deploy Bicep template to development environment
+    - name: Deploy to development environment
       uses: azure/arm-deploy@v1
       with:
         subscriptionId: ${{ secrets.SUBSCRIPTION_ID_DEV }}
@@ -50,7 +53,7 @@ jobs:
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
     
-    - name: Deploy resource group
+    - name: Deploy test resource group
       uses: azure/arm-deploy@v1
       with: 
         scope: subscription
@@ -59,7 +62,7 @@ jobs:
         template: ./Templates/resourcegroup.bicep
         parameters: resourceGroupName=${{ secrets.RESOURCE_GROUP_NAME_TEST }} location=${{ vars.LOCATION }}
 
-    - name: Build and deploy Bicep template to development environment
+    - name: Deploy to test environment
       uses: azure/arm-deploy@v1
       with:
         subscriptionId: ${{ secrets.SUBSCRIPTION_ID_TEST }}
