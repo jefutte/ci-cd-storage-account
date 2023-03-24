@@ -1,16 +1,16 @@
+param location string = resourceGroup().location
 param storageAccountName string
 param fileShareName string
 
-resource storageAccount 'Microsoft.Storage/storageAccounts@2021-06-01' = {
+resource storageAccount 'Microsoft.Storage/storageAccounts@2022-09-01' = {
   name: storageAccountName
-  location: resourceGroup().location
+  location: location
   sku: {
     name: 'Standard_LRS'
   }
   kind: 'StorageV2'
   properties: {
     accessTier: 'Hot'
-    enableHttpsTrafficOnly: true
     minimumTlsVersion: 'TLS1_2'
     supportsHttpsTrafficOnly: true
     encryption: {
@@ -27,9 +27,16 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2021-06-01' = {
   }
 }
 
-resource fileShare 'Microsoft.Storage/storageAccounts/fileServices/shares@2021-06-01' = {
-  name: '${storageAccount.name}/${fileShareName}'
+resource service 'Microsoft.Storage/storageAccounts/fileServices@2021-02-01' = {
+  parent: storageAccount
+  name: 'default'
+}
+
+
+resource fileShare 'Microsoft.Storage/storageAccounts/fileServices/shares@2022-09-01' = {
+  parent: service
+  name: fileShareName
   properties: {
-    enabledProtocol: 'SMB'
+    enabledProtocols: 'SMB'
   }
 }
