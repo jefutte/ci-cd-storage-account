@@ -24,7 +24,7 @@ jobs:
       with: 
         scope: subscription
         subscriptionId: ${{ secrets.SUBSCRIPTION_ID_DEV }}
-        templateFilePath: ./Templates/resourcegroup.bicep
+        template: ./Templates/resourcegroup.bicep
         parameters: resourceGroupName=${{ secrets.RESOURCE_GROUP_NAME_DEV }} location=${{ env.LOCATION }}
 
     - name: Build and deploy Bicep template to development environment
@@ -32,5 +32,5 @@ jobs:
       with:
         subscriptionId: ${{ secrets.SUBSCRIPTION_ID_DEV }}
         resourceGroupName: ${{ secrets.RESOURCE_GROUP_NAME_DEV }}
-        templateFilePath: './Templates/storageaccount.bicep'
+        template: './Templates/storageaccount.bicep'
         parameters: storageAccountName=${{ env.STORAGE_ACCOUNT_NAME }} fileShareName=${{ env.FILE_SHARE_NAME }}
