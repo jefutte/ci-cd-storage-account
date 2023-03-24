@@ -27,9 +27,16 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2022-09-01' = {
   }
 }
 
+resource service 'Microsoft.Storage/storageAccounts/fileServices@2021-02-01' = {
+  parent: storageAccount
+  name: 'default'
+}
+
+
 resource fileShare 'Microsoft.Storage/storageAccounts/fileServices/shares@2022-09-01' = {
-  name: '${storageAccount.name}/default/${fileShareName}'
+  parent: service
+  name: fileShareName
   properties: {
-    enabledProtocol: 'SMB'
+    enabledProtocols: 'SMB'
   }
 }
