@@ -1,0 +1,27 @@
+name: Azure Bicep Deployment
+
+on:
+  push:
+    branches:
+      - feature/*
+  pull_request:
+    branches:
+      - feature/*
+
+jobs:
+  deploy_dev:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Login to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+    - name: Build and deploy Bicep template to development environment
+      uses: Azure/bicep-azuredeploy@v0.4
+      with:
+        subscriptionId: ${{ secrets.SUBSCRIPTION_ID_DEV }}
+        resourceGroupName: ${{ secrets.RESOURCE_GROUP_NAME_DEV }}
+        deploymentName: myDeployment
+        templatePath: './Templates/storageaccount.bicep'
+        parameters: '{ "storageAccountName": "sacppipeline001", "fileShareName": "fileshare001" }'
