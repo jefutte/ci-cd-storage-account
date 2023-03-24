@@ -11,8 +11,8 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2022-09-01' = {
   kind: 'StorageV2'
   properties: {
     accessTier: 'Hot'
-    enableHttpsTrafficOnly: true
     minimumTlsVersion: 'TLS1_2'
+    supportsHttpsTrafficOnly: true
     encryption: {
       keySource: 'Microsoft.Storage'
       services: {
